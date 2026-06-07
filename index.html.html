@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的可愛更衣室</title>
+    <style>
+        :root {
+            --primary-pink: #ffafcc;
+            --primary-blue: #a2d2ff;
+            --shelf-brown: #8b4513;
+            --button-green: #2a9d8f;
+            --button-green-shadow: #1e7066;
+        }
+        body {
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
+            height: 100vh; background-color: #f5f2eb; font-family: "Microsoft JhengHei", sans-serif; overflow: hidden;
+        }
+        
+        /* 開始介面 */
+        #start-page {
+            position: relative;
+            width: 1100px; height: 650px; 
+            background-image: url('https://i.ibb.co/5WWZ4gb0/0a470c75-e561-4dde-ae87-786999a5eff1.jpg');
+            background-size: 100% 100%; background-position: center;
+            border: 8px solid white; border-radius: 40px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .start-title { 
+            font-size: 46px; color: #8b4513; margin-bottom: 50px; 
+            text-shadow: 2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white; 
+            font-weight: bold;
+        }
+        
+        .start-buttons { display: flex; gap: 40px; }
+        
+        .btn-big-start {
+            background-color: var(--button-green); 
+            color: #000000; 
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8), -1px -1px 0px rgba(255,255,255,0.8);
+            padding: 25px 80px; 
+            font-size: 36px;      
+            border-radius: 50px; 
+            box-shadow: 0 10px 0 var(--button-green-shadow); 
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .btn-big-start:hover { background-color: #35b3a4; }
+        .btn-big-start:active { transform: translateY(6px); box-shadow: 0 4px 0 var(--button-green-shadow); }
+
+        .btn-gender-start { 
+            font-size: 32px;      
+            padding: 25px 50px;   
+            background-color: #fff; 
+            border: 4px solid #8b4513; 
+            border-radius: 40px; 
+            color: #8b4513; 
+            box-shadow: 0 8px 0 #8b4513;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .btn-gender-start:hover { background-color: #f5ebe0; }
+        .btn-gender-start:active { transform: translateY(4px); box-shadow: 0 4px 0 #8b4513; }
+        
+        /* 遊戲介面 */
+        #game-page {
+            display: none; width: 1100px; height: 650px; 
+            background-image: url('https://i.ibb.co/93wH0swM/d5c94489-4dc2-44b7-a9e9-eeab2f3e020d.png'); 
+            background-size: 100% 100%; background-position: center;
+            border: 8px solid white; border-radius: 40px; position: relative; display: flex; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        
+        .character-zone { flex: 1.2; z-index: 2; display: flex; justify-content: center; align-items: center; }
+        #character { width: 320px; height: 480px; background-size: contain; background-repeat: no-repeat; background-position: center center; position: relative; z-index: 3; }
+        .clothes-layer { position: absolute; width: 100%; height: 100%; left: 0; top: 0; background-repeat: no-repeat; pointer-events: none; opacity: 1; }
+        #top-layer { z-index: 6; }
+        #bottom-layer { z-index: 5; }
+        
+        .wardrobe-zone { flex: 1; z-index: 2; padding: 30px; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
+        .shelf { background: rgba(139, 69, 19, 0.65); border: 5px solid #d4a373; border-radius: 20px; padding: 20px; }
+        .shelf-title { text-align: left; font-weight: bold; color: #fff; margin-bottom: 15px; font-size: 22px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .items-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        
+        .item-btn { 
+            aspect-ratio: 1; border: 3px solid white; border-radius: 18px; cursor: pointer; background-size: 85%; background-repeat: no-repeat; background-position: center; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+        .item-btn:hover { transform: scale(1.08); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .item-btn:active { transform: scale(0.95); }
+        
+        .btn-main { padding: 12px 24px; border-radius: 25px; border: none; background: white; box-shadow: 0 4px 0 #ddd; cursor: pointer; font-weight: bold; font-size: 20px; }
+        #done-btn { background-color: #ff8fb1; color: white; box-shadow: 0 6px 0 #c76d8b; margin-top: 15px; padding: 15px; font-size: 22px; border-radius: 30px; }
+        #done-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c76d8b; }
+        #reselect-btn { position: absolute; top: 20px; left: 20px; z-index: 10; }
+        
+        .showcase-mode .wardrobe-zone { display: none; }
+        .showcase-mode .character-zone { transform: scale(1.1); margin: 0 auto; }
+        .showcase-mode #done-btn { display: none; }
+        .showcase-mode #reselect-btn { display: none; }
+        #replay-btn { display: none; position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 20; background-color: #4caf50; color: white; box-shadow: 0 4px 0 #2e7d32; }
+        .show { display: block !important; }
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="start-page">
+        <h1 class="start-title"></h1>
+        <div id="welcome-buttons">
+            <button class="btn-main btn-big-start" onclick="showGenderSelection()">✨ 開始遊戲 ✨</button>
+        </div>
+        <div id="gender-buttons" class="start-buttons" style="display: none;">
+            <button class="btn-main btn-gender-start" onclick="selectGender('boy')">👦 男孩角色</button>
+            <button class="btn-main btn-gender-start" onclick="selectGender('girl')">👧 女孩角色</button>
+        </div>
+    </div>
+
+    <div id="game-page" class="hide">
+        <button id="reselect-btn" class="btn-main" onclick="backToGender()">🔄 重新選擇性別</button>
+        
+        <div class="character-zone" id="char-zone">
+            <div id="character">
+                <div id="bottom-layer" class="clothes-layer"></div>
+                <div id="top-layer" class="clothes-layer"></div>
+            </div>
+        </div>
+        <div class="wardrobe-zone" id="wardrobe">
+            <div class="shelf">
+                <div class="shelf-title">👕 上衣選擇</div>
+                <div class="items-grid" id="tops-grid"></div>
+            </div>
+            <div class="shelf">
+                <div class="shelf-title">👖 褲子選擇</div>
+                <div class="items-grid" id="bottoms-grid"></div>
+            </div>
+            <button id="done-btn" class="btn-main" onclick="finishGame()">✨ 穿好了！</button>
+        </div>
+        <button id="replay-btn" class="btn-main" onclick="restartGame()">🔄 再玩一次</button>
+    </div>
+
+    <script>
+        const topColors = ['#e63946', '#00b4d8', '#ffb703', '#2a9d8f', '#f4a261'];
+        const bottomColors = ['#6c757d', '#1b4332', '#90a955', '#ddbea9', '#343a40'];
+
+        const boyTops = [
+            ['https://i.ibb.co/84XQj6d0/6.png', '56%', '53%', '58%'],
+            ['https://i.ibb.co/9Hc5WkNp/7.png', '53%', '55%', '58%'],
+            ['https://i.ibb.co/wNNsgCqD/11.png', '62%', '54%', '59%'],
+            ['https://i.ibb.co/ymqbhQPY/9.png', '51%', '53%', '56%'],
+            ['https://i.ibb.co/5XZzpBD0/10.png', '53%', '54%', '59%']
+        ];
+        const boyBottoms = [
+            ['https://i.ibb.co/0pDLnCvq/4.png', '50%', '52%', '86%'],
+            ['https://i.ibb.co/CZRB7B5/5.png', '45%', '52%', '86%'],
+            ['https://i.ibb.co/9mcQ1bCt/3.png', '45%', '52%', '78%'],
+            ['https://i.ibb.co/7Nxrr4hm/2.png', '55%', '53%', '79%'],
+            ['https://i.ibb.co/Gv4vtm7j/1.png', '40%', '53%', '85%']
+        ];
+        const girlTops = [
+            ['https://i.ibb.co/0gjtj8f/3.png', '50%', '50%', '57%'],
+            ['https://i.ibb.co/Gv0KZrfC/2.png', '55%', '50%', '60%'],
+            ['https://i.ibb.co/s9LtLC2x/image.png', '50%', '48%', '58%'], 
+            ['https://i.ibb.co/4nWYg9wZ/6.png', '56%', '48%', '56%'],
+            ['https://i.ibb.co/fYSP4JJq/7.png', '48%', '48%', '54%']
+        ];
+        const girlBottoms = [
+            ['https://i.ibb.co/8DHHvKFy/image.png', '38%', '48%', '73%'],
+            ['https://i.ibb.co/PzDmDQvc/4.png', '40%', '50%', '66%'],
+            ['https://i.ibb.co/7xw2gwCJ/1.png', '35%', '48%', '76%'],
+            ['https://i.ibb.co/JjY263GT/8.png', '48%', '50%', '75%'],
+            ['https://i.ibb.co/Swqf1h7L/image.png', '105%', '87%', '90%']
+        ];
+
+        let currentGender = 'girl';
+        let currentEquipped = { top: '', bottom: '' };
+
+        function showGenderSelection() {
+            document.getElementById('welcome-buttons').style.display = 'none';
+            document.getElementById('gender-buttons').style.display = 'flex';
+        }
+
+        function initWardrobe(gender) {
+            const topsGrid = document.getElementById('tops-grid');
+            const bottomsGrid = document.getElementById('bottoms-grid');
+            topsGrid.innerHTML = ''; bottomsGrid.innerHTML = '';
+            const tops = gender === 'boy' ? boyTops : girlTops;
+            const bottoms = gender === 'boy' ? boyBottoms : girlBottoms;
+
+            tops.forEach((item, index) => {
+                const btn = document.createElement('div'); 
+                btn.className = 'item-btn';
+                btn.style.backgroundColor = topColors[index % topColors.length];
+                btn.style.backgroundImage = `url('${item[0]}')`; 
+                btn.onclick = () => wear('top', item[0], item[1], item[2], item[3]); 
+                topsGrid.appendChild(btn);
+            });
+            bottoms.forEach((item, index) => {
+                const btn = document.createElement('div'); 
+                btn.className = 'item-btn';
+                btn.style.backgroundColor = bottomColors[index % bottomColors.length];
+                btn.style.backgroundImage = `url('${item[0]}')`; 
+                btn.onclick = () => wear('bottom', item[0], item[1], item[2], item[3]); 
+                bottomsGrid.appendChild(btn);
+            });
+        }
+
+        function selectGender(gender) {
+            currentGender = gender;
+            document.getElementById('start-page').style.display = 'none'; 
+            document.getElementById('game-page').classList.remove('hide');
+            document.getElementById('game-page').style.display = 'flex'; 
+            const char = document.getElementById('character');
+            document.getElementById('top-layer').style.backgroundImage = 'none'; 
+            document.getElementById('bottom-layer').style.backgroundImage = 'none';
+            currentEquipped.top = ''; currentEquipped.bottom = '';
+            initWardrobe(gender);
+            if (gender === 'boy') {
+                char.style.backgroundImage = "url('https://i.ibb.co/R4ZFTVK2/boy.png')"; 
+            } else {
+                char.style.backgroundImage = "url('https://i.ibb.co/cXpSkSv5/girl.png')"; 
+            }
+        }
+
+        function wear(type, imgUrl, sizePercent, xPercent, yPercent) {
+            const layer = document.getElementById(type + '-layer');
+            if (currentEquipped[type] === imgUrl) {
+                layer.style.backgroundImage = 'none';
+                currentEquipped[type] = '';
+            } else {
+                layer.style.backgroundImage = `url('${imgUrl}')`;
+                layer.style.backgroundSize = sizePercent;
+                layer.style.backgroundPosition = `${xPercent} ${yPercent}`;
+                currentEquipped[type] = imgUrl;
+            }
+        }
+        
+        function finishGame() {
+            document.getElementById('game-page').classList.add('showcase-mode');
+            document.getElementById('replay-btn').style.display = 'block';
+        }
+        function backToGender() {
+            document.getElementById('game-page').style.display = 'none';
+            document.getElementById('start-page').classList.remove('hide');
+            document.getElementById('start-page').style.display = 'flex'; 
+            document.getElementById('welcome-buttons').style.display = 'none';
+            document.getElementById('gender-buttons').style.display = 'flex';
+        }
+        function restartGame() {
+            document.getElementById('game-page').style.display = 'none';
+            document.getElementById('start-page').classList.remove('hide');
+            document.getElementById('start-page').style.display = 'flex'; 
+            document.getElementById('game-page').classList.remove('showcase-mode');
+            document.getElementById('replay-btn').style.display = 'none';
+            document.getElementById('welcome-buttons').style.display = 'block';
+            document.getElementById('gender-buttons').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
